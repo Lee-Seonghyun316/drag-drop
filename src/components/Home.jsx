@@ -1,46 +1,76 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-const Home = () => (
-  <div>
-    <Header>
-      <Button>실행하기</Button>
-    </Header>
-    <Contents>
-      <BlocksContainer>
-        <Title>data</Title>
-        <div>
-          <Title>Data Blocks</Title>
-          <Blocks>
-            <Block>data Blocks</Block>
-            <Block>
-              Smarter alone, <br />
-              Smartest together
-            </Block>
-            <Block>
-              Make Al work for the <br />
-              rest of us
-            </Block>
-          </Blocks>
-        </div>
-        <div>
-          <Title>Function Blocks</Title>
-          <Blocks>
-            <Block>toUpperCase</Block>
-            <Block>wordNum</Block>
-            <Block>reverse</Block>
-          </Blocks>
-        </div>
-      </BlocksContainer>
-      <CardsContainer>
-        <Cards>
-          <Card>데이터 슬롯</Card>
-          <Card>함수 슬롯</Card>
-          <Card>결과 슬롯</Card>
-        </Cards>
-      </CardsContainer>
-    </Contents>
-  </div>
-);
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { cards, dataBlocks } from '../data';
+const Home = () => {
+  const [data, setData] = useState(dataBlocks);
+  const handleChange = (result) => {
+    console.log(result);
+    if (!result.destination) return;
+    const items = [...data];
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    setData(items);
+  };
+  return (
+    <DragDropContext onDragEnd={handleChange}>
+      <Header>
+        <Button>실행하기</Button>
+      </Header>
+      <Contents>
+        <BlocksContainer>
+          <Title>data</Title>
+          <div>
+            <Title>Data Blocks</Title>
+            <Droppable droppableId="dataBlocks">
+              {(provided) => (
+                <Blocks {...provided.droppableProps} ref={provided.innerRef}>
+                  {/*<Blocks>*/}
+                  {data.map(({ id, title }, index) => (
+                    <Draggable key={id} draggableId={title} index={index}>
+                      {(provided) => (
+                        <Block
+                          key={id}
+                          ref={provided.innerRef}
+                          {...provided.dragHandleProps}
+                          {...provided.draggableProps}
+                        >
+                          {title}
+                        </Block>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </Blocks>
+              )}
+            </Droppable>
+          </div>
+          <div>
+            <Title>Function Blocks</Title>
+            <Blocks>
+              <Block>toUpperCase</Block>
+              <Block>wordNum</Block>
+              <Block>reverse</Block>
+            </Blocks>
+          </div>
+        </BlocksContainer>
+        <CardsContainer>
+          <Cards className="cards">
+            {cards.map(({ id, title }, index) => (
+              <Droppable key={id} droppableId="card">
+                {(provided) => (
+                  <Card {...provided.droppableProps} ref={provided.innerRef}>
+                    {title}
+                  </Card>
+                )}
+              </Droppable>
+            ))}
+          </Cards>
+        </CardsContainer>
+      </Contents>
+    </DragDropContext>
+  );
+};
 
 export default Home;
 
@@ -90,18 +120,19 @@ const Block = styled.li`
   padding: 0.5rem;
   border-radius: ${({ theme }) => theme.borderRadius};
   box-shadow: 0px 5px 11px 5px #e0e0e0;
+  background-color: ${({ theme }) => theme.color.white};
 `;
 const CardsContainer = styled.main`
   width: 80%;
   ${({ theme }) => theme.common.flexCenter};
 `;
-const Cards = styled.div`
+const Cards = styled.ul`
   display: flex;
   justify-content: space-between;
   width: 50%;
   border-bottom: 3px solid ${({ theme }) => theme.color.grey};
 `;
-const Card = styled.div`
+const Card = styled.li`
   transform: translateY(1rem);
   padding: 15% 5%;
   text-align: center;
