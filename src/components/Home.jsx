@@ -43,7 +43,7 @@ const Home = () => {
           ...destColumn,
           items: { id: uuid(), name: result.draggableId },
         },
-        resultSlot: resultSlot,
+        resultSlot: { ...dropRegionData['resultSlot'] },
       });
     };
     if (source.droppableId === 'dataBlocks' && destination.droppableId === 'dataSlot') {
