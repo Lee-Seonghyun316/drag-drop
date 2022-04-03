@@ -5,6 +5,7 @@ import uuid from 'react-uuid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { dataBlocks, dropRegionData, functionBlocks } from '../data';
+import Header from './Header';
 
 const Home = () => {
   const [dropRegions, setDropRegions] = useState(dropRegionData);
@@ -122,14 +123,10 @@ const Home = () => {
   };
   return (
     <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
-      <Header>
-        <Button
-          onClick={handleClickExecution}
-          activate={dropRegions.dataSlot.items.length > 0 && dropRegions.functionSlot.items.length > 0}
-        >
-          실행하기
-        </Button>
-      </Header>
+      <Header
+        onClick={handleClickExecution}
+        buttonActive={dropRegions.dataSlot.items.length > 0 && dropRegions.functionSlot.items.length > 0}
+      />
       <Contents>
         {dropRegions.resultSlot.items.length > 0 ? (
           <Message>
@@ -241,27 +238,6 @@ const Contents = styled.div`
     font-size: ${({ theme }) => theme.fontSize.xxSmall};
   }
 `;
-const Header = styled.header`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  border-bottom: 1px solid ${({ theme }) => theme.color.lightGrey};
-  display: flex;
-  justify-content: flex-end;
-`;
-const Button = styled.button`
-  z-index: 10;
-  padding: 0.5rem 2rem;
-  margin: 0.5rem 1rem;
-  background-color: ${({ theme, activate }) => (activate ? 'rebeccapurple' : theme.color.lightGrey)};
-  border-radius: ${({ theme }) => theme.borderRadius};
-  color: ${({ theme }) => theme.color.white};
-  font-weight: 600;
-  font-size: ${({ theme }) => theme.fontSize.xSmall};
-  ${({ activate }) => activate && `cursor: pointer`}
-`;
-
 const BlocksContainer = styled.section`
   ${({ theme }) => theme.common.flexColumn};
   width: 20%;
