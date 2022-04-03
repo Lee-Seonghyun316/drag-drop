@@ -2,18 +2,63 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { cards, dataBlocks } from '../data';
+import uuid from 'react-uuid';
+
+const dropRegionData = {
+  [uuid()]: {
+    name: '데이터 슬롯',
+    items: [],
+  },
+  [uuid()]: {
+    name: '함수 슬롯',
+    items: [],
+  },
+  [uuid()]: {
+    name: '결과 슬롯',
+    items: [],
+  },
+};
+
+const onDragEnd = (result, dropRegions, setDropRegions, data, setData) => {
+  if (!result.destination) return;
+  const { source, destination } = result;
+
+  if (source.droppableId !== destination.droppableId) {
+    const dataItems = [...data];
+    const destColumn = dropRegions[destination.droppableId];
+    //
+    const removed = dataItems.splice(source.index, 1);
+    const destItems = [...removed];
+    console.log(destItems);
+    setDropRegions({
+      ...dropRegions,
+      [destination.droppableId]: {
+        ...destColumn,
+        items: destItems,
+      },
+    });
+  }
+};
+const handleDropAnimation = (style, snapshot) => {
+  if (!snapshot.isDropAnimating) {
+    return style;
+  }
+  return {
+    ...style,
+    transitionDuration: `0.01s`,
+  };
+};
+
 const Home = () => {
+  const [dropRegions, setDropRegions] = useState(dropRegionData);
   const [data, setData] = useState(dataBlocks);
-  const handleChange = (result) => {
-    console.log(result);
-    if (!result.destination) return;
-    const items = [...data];
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    setData(items);
+  const handleClickDelete = (e, id, dropRegion) => {
+    if (e.target.className.includes('delete')) {
+      setDropRegions((dropRegions) => ({ ...dropRegions, [id]: { ...dropRegion, items: [] } }));
+    }
   };
   return (
-    <DragDropContext onDragEnd={handleChange}>
+    <DragDropContext onDragEnd={(result) => onDragEnd(result, dropRegions, setDropRegions, data, setData)}>
       <Header>
         <Button>실행하기</Button>
       </Header>
@@ -25,17 +70,18 @@ const Home = () => {
             <Droppable droppableId="dataBlocks">
               {(provided) => (
                 <Blocks {...provided.droppableProps} ref={provided.innerRef}>
-                  {/*<Blocks>*/}
-                  {data.map(({ id, title }, index) => (
-                    <Draggable key={id} draggableId={title} index={index}>
-                      {(provided) => (
+                  {data.map((item, index) => (
+                    <Draggable key={item.id} draggableId={item.name} index={index}>
+                      {(provided, snapshot) => (
                         <Block
-                          key={id}
+                          key={item.id}
                           ref={provided.innerRef}
                           {...provided.dragHandleProps}
                           {...provided.draggableProps}
+                          style={handleDropAnimation(provided.draggableProps.style, snapshot)}
                         >
-                          {title}
+                          {item.name}
+                          {provided.placeholder}
                         </Block>
                       )}
                     </Draggable>
@@ -56,11 +102,22 @@ const Home = () => {
         </BlocksContainer>
         <CardsContainer>
           <Cards className="cards">
-            {cards.map(({ id, title }, index) => (
-              <Droppable key={id} droppableId="card">
-                {(provided) => (
-                  <Card {...provided.droppableProps} ref={provided.innerRef}>
-                    {title}
+            {Object.entries(dropRegions).map(([id, dropRegion], index) => (
+              <Droppable droppableId={id} key={id}>
+                {(provided, snapshot) => (
+                  <Card
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    isDraggedOver={snapshot.isDraggingOver}
+                    isData={dropRegion.items.length > 0}
+                  >
+                    {dropRegion.items.length > 0 ? (
+                      <Delete className="delete" onClick={(e) => handleClickDelete(e, id, dropRegion)}>
+                        X
+                      </Delete>
+                    ) : null}
+                    <CardText>{dropRegion.items.length > 0 ? dropRegion.items[0].name : dropRegion.name}</CardText>
+                    {provided.placeholder}
                   </Card>
                 )}
               </Droppable>
@@ -126,20 +183,34 @@ const CardsContainer = styled.main`
   width: 80%;
   ${({ theme }) => theme.common.flexCenter};
 `;
-const Cards = styled.ul`
+const Cards = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 50%;
+  width: 60%;
   border-bottom: 3px solid ${({ theme }) => theme.color.grey};
 `;
-const Card = styled.li`
+const Card = styled.div`
   transform: translateY(1rem);
-  padding: 15% 5%;
-  text-align: center;
-  min-width: 15%;
-  background-color: ${({ theme }) => theme.color.lightGrey};
+  position: relative;
+  width: 30%;
+  height: 10rem;
+  list-style: none;
+  background-color: ${({ isData, theme }) => (isData ? theme.color.white : theme.color.lightGrey)};
   border-radius: ${({ theme }) => theme.borderRadius};
-  @media ${({ theme }) => theme.device.mobile} {
-    padding: 15% 0;
-  }
+  border: ${({ isData, isDraggedOver, theme }) =>
+    isDraggedOver ? `2px dashed ${theme.color.grey}` : isData ? `1px solid ${theme.color.black}` : 'none'};
+`;
+const CardText = styled.p`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  text-align: center;
+`;
+const Delete = styled.button`
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  cursor: pointer;
 `;
