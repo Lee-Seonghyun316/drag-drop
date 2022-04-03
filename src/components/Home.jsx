@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { dataBlocks, dropRegionData, functionBlocks } from '../data';
 import uuid from 'react-uuid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { dataBlocks, dropRegionData, functionBlocks } from '../data';
 
 const Home = () => {
   const [dropRegions, setDropRegions] = useState(dropRegionData);
   const [data, setData] = useState(dataBlocks);
   const [functions, setFunctions] = useState(functionBlocks);
-  const searchBelong = (id) => {
+  const matchBelong = (id) => {
     const data = dataBlocks.map((item) => item.name);
     if (data.includes(id)) {
       return 'dataBlocks';
@@ -21,7 +21,7 @@ const Home = () => {
     }
   };
   const handleDropError = (draggedId, droppedId) => {
-    const belong = searchBelong(draggedId);
+    const belong = matchBelong(draggedId);
     if (belong === 'dataBlocks' && droppedId === 'dataSlot') {
       return true;
     }
@@ -30,7 +30,7 @@ const Home = () => {
     }
     return false;
   };
-  const onDragEnd = (result) => {
+  const handleDragEnd = (result) => {
     if (!result.destination) return;
     const { source, destination } = result;
     if (source.droppableId === destination.droppableId) return;
@@ -103,16 +103,25 @@ const Home = () => {
       resultSlot: { ...dropRegions.resultSlot, items: [{ id: uuid(), name: result }] },
     });
   };
-  const makeMessage = (belong) => {
-    if (belong === 'dataBlocks') {
+  const makeMessage = (text) => {
+    if (text === 'dataBlocks') {
       return '데이터 슬롯으로 이동:)';
     }
-    if (belong === 'functionBlocks') {
+    if (text === 'functionBlocks') {
       return '함수 슬롯으로 이동:)';
+    }
+    if (text === 'toUpperCase') {
+      return '대문자로 변경:)';
+    }
+    if (text === 'wordNum') {
+      return '단어수:)';
+    }
+    if (text === 'reverse') {
+      return '글자 뒤집기';
     }
   };
   return (
-    <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+    <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
       <Header>
         <Button
           onClick={handleClickExecution}
@@ -122,6 +131,11 @@ const Home = () => {
         </Button>
       </Header>
       <Contents>
+        {dropRegions.resultSlot.items.length > 0 ? (
+          <Message>
+            <FontAwesomeIcon icon={faUser} /> {makeMessage(dropRegions.functionSlot.items[0].name)}
+          </Message>
+        ) : null}
         <BlocksContainer>
           <div>
             <Title>Data Blocks</Title>
