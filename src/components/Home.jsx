@@ -8,14 +8,15 @@ import Message from './Message';
 
 const Home = () => {
   const [dropRegions, setDropRegions] = useState(dropRegionData);
+  const { dataSlot, functionSlot, resultSlot } = dropRegions;
   const [data, setData] = useState(dataBlocks);
   const [functions, setFunctions] = useState(functionBlocks);
   const matchBelong = (id) => {
-    const data = dataBlocks.map((item) => item.name);
+    const data = dataBlocks.map(({ name }) => name);
     if (data.includes(id)) {
       return 'dataBlocks';
     }
-    const functions = functionBlocks.map((item) => item.name);
+    const functions = functionBlocks.map(({ name }) => name);
     if (functions.includes(id)) {
       return 'functionBlocks';
     }
@@ -31,8 +32,8 @@ const Home = () => {
     return false;
   };
   const handleDragEnd = (result) => {
-    if (!result.destination) return;
     const { source, destination } = result;
+    if (!destination) return;
     if (source.droppableId === destination.droppableId) return;
     const changeDropRegion = () => {
       const destColumn = dropRegions[destination.droppableId];
@@ -42,7 +43,7 @@ const Home = () => {
           ...destColumn,
           items: [{ id: uuid(), name: result.draggableId }],
         },
-        resultSlot: dropRegionData.resultSlot,
+        resultSlot: resultSlot,
       });
     };
     if (source.droppableId === 'dataBlocks' && destination.droppableId === 'dataSlot') {
@@ -68,7 +69,7 @@ const Home = () => {
       setDropRegions({
         ...dropRegions,
         [id]: { ...dropRegion, items: [] },
-        resultSlot: dropRegionData.resultSlot,
+        resultSlot: resultSlot,
       });
       setData(dataBlocks);
       setFunctions(functionBlocks);
@@ -84,23 +85,23 @@ const Home = () => {
     return item.split('').reverse().join('');
   };
   const handleClickExecution = () => {
-    if (dropRegions.dataSlot.items.length === 0 || dropRegions.functionSlot.items.length === 0) {
+    if (dataSlot.items.length === 0 || functionSlot.items.length === 0) {
       return;
     }
-    const functionName = dropRegions.functionSlot.items[0].name;
+    const functionName = functionSlot.items[0].name;
     let result;
     if (functionName === 'toUpperCase') {
-      result = makeUpperCase(dropRegions.dataSlot.items[0].name);
+      result = makeUpperCase(dataSlot.items[0].name);
     }
     if (functionName === 'wordNum') {
-      result = deriveWordNum(dropRegions.dataSlot.items[0].name);
+      result = deriveWordNum(dataSlot.items[0].name);
     }
     if (functionName === 'reverse') {
-      result = makeReverse(dropRegions.dataSlot.items[0].name);
+      result = makeReverse(dataSlot.items[0].name);
     }
     setDropRegions({
       ...dropRegions,
-      resultSlot: { ...dropRegions.resultSlot, items: [{ id: uuid(), name: result }] },
+      resultSlot: { ...resultSlot, items: [{ id: uuid(), name: result }] },
     });
   };
 
@@ -108,27 +109,27 @@ const Home = () => {
     <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
       <Header
         onClick={handleClickExecution}
-        buttonActive={dropRegions.dataSlot.items.length > 0 && dropRegions.functionSlot.items.length > 0}
+        buttonActive={dataSlot.items.length > 0 && functionSlot.items.length > 0}
       />
       <Contents>
-        {dropRegions.resultSlot.items.length > 0 ? <Message text={dropRegions.functionSlot.items[0].name} /> : null}
+        {resultSlot.items.length > 0 ? <Message text={functionSlot.items[0].name} /> : null}
         <BlocksContainer>
           <div>
             <Title>Data Blocks</Title>
             <Droppable droppableId="dataBlocks">
               {(provided, snapshot) => (
                 <Blocks {...provided.droppableProps} ref={provided.innerRef}>
-                  {data.map((item, index) => (
-                    <Draggable key={item.id} draggableId={item.name} index={index}>
+                  {data.map(({ id, name }, index) => (
+                    <Draggable key={id} draggableId={name} index={index}>
                       {(provided, snapshot) => (
                         <Block
-                          key={item.id}
+                          key={id}
                           ref={provided.innerRef}
                           {...provided.dragHandleProps}
                           {...provided.draggableProps}
                           style={handleDropAnimation(provided.draggableProps.style, snapshot)}
                         >
-                          {item.name}
+                          {name}
                           {provided.placeholder}
                         </Block>
                       )}
@@ -145,17 +146,17 @@ const Home = () => {
             <Droppable droppableId="functionBlocks">
               {(provided, snapshot) => (
                 <Blocks {...provided.droppableProps} ref={provided.innerRef}>
-                  {functions.map((item, index) => (
-                    <Draggable key={item.id} draggableId={item.name} index={index}>
+                  {functions.map(({ id, name }, index) => (
+                    <Draggable key={id} draggableId={name} index={index}>
                       {(provided, snapshot) => (
                         <Block
-                          key={item.id}
+                          key={id}
                           ref={provided.innerRef}
                           {...provided.dragHandleProps}
                           {...provided.draggableProps}
                           style={handleDropAnimation(provided.draggableProps.style, snapshot)}
                         >
-                          {item.name}
+                          {name}
                           {provided.placeholder}
                         </Block>
                       )}
