@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import uuid from 'react-uuid';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { dataBlocks, dropRegionData, functionBlocks } from '../data';
 import Header from './Header';
+import Message from './Message';
 
 const Home = () => {
   const [dropRegions, setDropRegions] = useState(dropRegionData);
@@ -104,23 +103,7 @@ const Home = () => {
       resultSlot: { ...dropRegions.resultSlot, items: [{ id: uuid(), name: result }] },
     });
   };
-  const makeMessage = (text) => {
-    if (text === 'dataBlocks') {
-      return '데이터 슬롯으로 이동:)';
-    }
-    if (text === 'functionBlocks') {
-      return '함수 슬롯으로 이동:)';
-    }
-    if (text === 'toUpperCase') {
-      return '대문자로 변경:)';
-    }
-    if (text === 'wordNum') {
-      return '단어수:)';
-    }
-    if (text === 'reverse') {
-      return '글자 뒤집기';
-    }
-  };
+
   return (
     <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
       <Header
@@ -128,11 +111,7 @@ const Home = () => {
         buttonActive={dropRegions.dataSlot.items.length > 0 && dropRegions.functionSlot.items.length > 0}
       />
       <Contents>
-        {dropRegions.resultSlot.items.length > 0 ? (
-          <Message>
-            <FontAwesomeIcon icon={faUser} /> {makeMessage(dropRegions.functionSlot.items[0].name)}
-          </Message>
-        ) : null}
+        {dropRegions.resultSlot.items.length > 0 ? <Message text={dropRegions.functionSlot.items[0].name} /> : null}
         <BlocksContainer>
           <div>
             <Title>Data Blocks</Title>
@@ -156,11 +135,7 @@ const Home = () => {
                     </Draggable>
                   ))}
                   {provided.placeholder}
-                  {snapshot.isUsingPlaceholder ? (
-                    <Message>
-                      <FontAwesomeIcon icon={faUser} /> {makeMessage('dataBlocks')}
-                    </Message>
-                  ) : null}
+                  {snapshot.isUsingPlaceholder ? <Message text="dataBlocks" /> : null}
                 </Blocks>
               )}
             </Droppable>
@@ -187,11 +162,7 @@ const Home = () => {
                     </Draggable>
                   ))}
                   {provided.placeholder}
-                  {snapshot.isUsingPlaceholder ? (
-                    <Message>
-                      <FontAwesomeIcon icon={faUser} /> {makeMessage('functionBlocks')}
-                    </Message>
-                  ) : null}
+                  {snapshot.isUsingPlaceholder ? <Message text="functionBlocks" /> : null}
                 </Blocks>
               )}
             </Droppable>
@@ -301,28 +272,4 @@ const Delete = styled.button`
   top: 0.5rem;
   right: 0.5rem;
   cursor: pointer;
-`;
-const Message = styled.div`
-  position: absolute;
-  bottom: 2rem;
-  right: 0rem;
-  padding: 0.5rem 1rem;
-  border-radius: 2rem;
-  background-color: rebeccapurple;
-  color: white;
-  opacity: 0;
-  animation: slide 1.5s linear;
-  @keyframes slide {
-    0% {
-      opacity: 0;
-    }
-    30%,
-    60% {
-      opacity: 1;
-      transform: translateX(-2rem);
-    }
-    100% {
-      opacity: 0;
-    }
-  }
 `;
