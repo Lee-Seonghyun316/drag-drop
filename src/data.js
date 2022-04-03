@@ -15,14 +15,14 @@ export const functionBlocks = [
 export const dropRegionData = {
   dataSlot: {
     name: '데이터 슬롯',
-    items: [],
+    items: null,
   },
   functionSlot: {
     name: '함수 슬롯',
-    items: [],
+    items: null,
   },
   resultSlot: {
     name: '결과 슬롯',
-    items: [],
+    items: null,
   },
 };

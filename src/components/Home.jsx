@@ -7,10 +7,10 @@ import Header from './Header';
 import Message from './Message';
 
 const Home = () => {
-  const [dropRegions, setDropRegions] = useState(dropRegionData);
+  const [dropRegions, setDropRegions] = useState({ ...dropRegionData });
   const { dataSlot, functionSlot, resultSlot } = dropRegions;
-  const [data, setData] = useState(dataBlocks);
-  const [functions, setFunctions] = useState(functionBlocks);
+  const [data, setData] = useState([...dataBlocks]);
+  const [functions, setFunctions] = useState([...functionBlocks]);
   const matchBelong = (id) => {
     const data = dataBlocks.map(({ name }) => name);
     if (data.includes(id)) {
@@ -41,7 +41,7 @@ const Home = () => {
         ...dropRegions,
         [destination.droppableId]: {
           ...destColumn,
-          items: [{ id: uuid(), name: result.draggableId }],
+          items: { id: uuid(), name: result.draggableId },
         },
         resultSlot: resultSlot,
       });
@@ -64,15 +64,19 @@ const Home = () => {
       transitionDuration: `0.01s`,
     };
   };
-  const handleClickDelete = (e, id, dropRegion) => {
+  const handleClickDelete = (e, id) => {
     if (e.target.className.includes('delete')) {
       setDropRegions({
         ...dropRegions,
-        [id]: { ...dropRegion, items: [] },
-        resultSlot: resultSlot,
+        [id]: { ...dropRegionData[id] },
+        resultSlot: { ...dropRegionData['resultSlot'] },
       });
-      setData(dataBlocks);
-      setFunctions(functionBlocks);
+      if (id === 'dataSlot') {
+        setData([...dataBlocks]);
+      }
+      if (id === 'functionSlot') {
+        setFunctions([...functionBlocks]);
+      }
     }
   };
   const makeUpperCase = (item) => {
@@ -85,34 +89,31 @@ const Home = () => {
     return item.split('').reverse().join('');
   };
   const handleClickExecution = () => {
-    if (dataSlot.items.length === 0 || functionSlot.items.length === 0) {
+    if (dataSlot.items === null || functionSlot.items === null) {
       return;
     }
-    const functionName = functionSlot.items[0].name;
+    const functionName = functionSlot.items.name;
     let result;
     if (functionName === 'toUpperCase') {
-      result = makeUpperCase(dataSlot.items[0].name);
+      result = makeUpperCase(dataSlot.items.name);
     }
     if (functionName === 'wordNum') {
-      result = deriveWordNum(dataSlot.items[0].name);
+      result = deriveWordNum(dataSlot.items.name);
     }
     if (functionName === 'reverse') {
-      result = makeReverse(dataSlot.items[0].name);
+      result = makeReverse(dataSlot.items.name);
     }
     setDropRegions({
       ...dropRegions,
-      resultSlot: { ...resultSlot, items: [{ id: uuid(), name: result }] },
+      resultSlot: { ...resultSlot, items: { id: uuid(), name: result } },
     });
   };
 
   return (
     <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>
-      <Header
-        onClick={handleClickExecution}
-        buttonActive={dataSlot.items.length > 0 && functionSlot.items.length > 0}
-      />
+      <Header onClick={handleClickExecution} buttonActive={dataSlot.items && functionSlot.items} />
       <Contents>
-        {resultSlot.items.length > 0 ? <Message text={functionSlot.items[0].name} /> : null}
+        {resultSlot.items ? <Message text={functionSlot.items.name} /> : null}
         <BlocksContainer>
           <div>
             <Title>Data Blocks</Title>
@@ -178,15 +179,15 @@ const Home = () => {
                     {...provided.droppableProps}
                     ref={provided.innerRef}
                     isDraggedOver={snapshot.isDraggingOver}
-                    isData={dropRegion.items.length > 0}
+                    isData={dropRegion.items}
                     isMatching={handleDropError(snapshot.draggingOverWith, id)}
                   >
-                    {id === 'resultSlot' ? null : dropRegion.items.length > 0 ? (
-                      <Delete className="delete" onClick={(e) => handleClickDelete(e, id, dropRegion)}>
+                    {id === 'resultSlot' ? null : dropRegion.items ? (
+                      <Delete className="delete" onClick={(e) => handleClickDelete(e, id)}>
                         X
                       </Delete>
                     ) : null}
-                    <CardText>{dropRegion.items.length > 0 ? dropRegion.items[0].name : dropRegion.name}</CardText>
+                    <CardText>{dropRegion.items ? dropRegion.items.name : dropRegion.name}</CardText>
                     {provided.placeholder}
                   </Card>
                 )}
