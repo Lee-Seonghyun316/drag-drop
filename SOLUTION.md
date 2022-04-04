@@ -5,7 +5,7 @@
 - Data Blocks, Function Blocks 의 Block 에서 드래그가 가능하고 해당하는 슬롯에 Drop 이 가능하도록 구현.
 
 ### 실행
-- 함수에 따라서 적절한 결과가 결과 슬롯에 나타나도록 구현
+- 함수에 따라서 적절한 결과가 결과 슬롯에 나타나도록 구현, 실행 함수에 따라 적절한 피드백 제공
 
 ### 렌더링 최적화
 - React.memo 와 useCallback을 이용하여 랜더링 최적화
@@ -13,6 +13,10 @@
 ### Props 타입 지정
 - proto-types 라이브러리를 사용하여 각 컴포넌트 props의 propTypes과 defaultProps 작성.
 
+### 디자인
+- styled component 를 이용하여 구현했으며, theme에서 자주 사용하는 값 변수에 할당.
+- GlobalStyle.jsx에 필요한 reset css 설정을 해주었으며, 뷰포트에 따른 글자 크기 지정.
+- 반응형은 미디어 쿼리와 상대단위를 사용하여 구현.
 
 ## 파일별 자세한 설명
 
