@@ -2,6 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Message = ({ text }) => {
   const makeMessage = (text) => {
@@ -26,6 +27,14 @@ const Message = ({ text }) => {
       <FontAwesomeIcon icon={faUser} /> {makeMessage(text)}
     </Wrap>
   );
+};
+
+Message.propTypes = {
+  text: PropTypes.string,
+};
+
+Message.defaultProps = {
+  text: PropTypes.string,
 };
 
 export default React.memo(Message);

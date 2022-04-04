@@ -2,6 +2,8 @@ import React from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import Message from './Message';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { dataBlocks } from '../data';
 
 const Blocks = ({ data, title, id }) => {
   const handleDropAnimation = (style, snapshot) => {
@@ -43,6 +45,18 @@ const Blocks = ({ data, title, id }) => {
       </Droppable>
     </div>
   );
+};
+
+Blocks.propTypes = {
+  data: PropTypes.array,
+  title: PropTypes.string,
+  id: PropTypes.string,
+};
+
+Blocks.defaultProps = {
+  data: dataBlocks,
+  title: '',
+  id: '',
 };
 
 export default React.memo(Blocks);

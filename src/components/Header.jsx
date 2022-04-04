@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Header = ({ onClick, buttonActive }) => (
   <Wrap>
@@ -8,6 +9,15 @@ const Header = ({ onClick, buttonActive }) => (
     </Button>
   </Wrap>
 );
+
+Header.propTypes = {
+  onClick: PropTypes.func,
+  buttonActive: PropTypes.bool,
+};
+
+Header.defaultProps = {
+  buttonActive: false,
+};
 
 export default React.memo(Header);
 

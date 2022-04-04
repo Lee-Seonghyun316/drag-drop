@@ -2,6 +2,7 @@ import React from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import { dataBlocks, functionBlocks } from '../data';
+import PropTypes from 'prop-types';
 
 const Cards = ({ data, onClickDelete }) => {
   const matchBelong = (id) => {
@@ -50,6 +51,15 @@ const Cards = ({ data, onClickDelete }) => {
       ))}
     </CardContainer>
   );
+};
+
+Cards.propTypes = {
+  data: PropTypes.array,
+  onClickDelete: PropTypes.func,
+};
+
+Cards.defaultProps = {
+  data: functionBlocks,
 };
 
 export default React.memo(Cards);
