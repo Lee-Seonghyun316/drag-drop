@@ -12,11 +12,7 @@ const Header = ({ onClick, buttonActive }) => (
 
 Header.propTypes = {
   onClick: PropTypes.func,
-  buttonActive: PropTypes.bool,
-};
-
-Header.defaultProps = {
-  buttonActive: false,
+  buttonActive: PropTypes.object,
 };
 
 export default React.memo(Header);

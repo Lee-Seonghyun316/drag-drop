@@ -54,7 +54,7 @@ const Cards = ({ data, onClickDelete }) => {
 };
 
 Cards.propTypes = {
-  data: PropTypes.array,
+  data: PropTypes.object,
   onClickDelete: PropTypes.func,
 };
 
