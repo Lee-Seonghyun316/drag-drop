@@ -21,6 +21,8 @@ npm run start
 Data Blocks 또는 Function Blocks 의 요소를 드래그 하면 이동할 슬롯에 대한 정보가 오른쪽 하단에 피드백으로 제공됩니다. 
 이때, 드롭 가능한 슬롯은 보라색 점선으로 테두리가 생기며, 드롭 불가능한 슬롯은 빨간색으로 테두리가 생깁니다. 
 <img width="1428" alt="스크린샷 2022-04-04 오후 2 46 45" src="https://user-images.githubusercontent.com/70502670/161481394-9dc1e23c-91be-48f0-a98e-ba3bf0ee159a.png">
+<img width="1427" alt="스크린샷 2022-04-04 오후 3 37 29" src="https://user-images.githubusercontent.com/70502670/161487454-a1245bbc-ab68-488b-8307-85c19e6097a5.png">
+<img width="1422" alt="스크린샷 2022-04-04 오후 3 37 17" src="https://user-images.githubusercontent.com/70502670/161487461-e6638acb-e4bf-4d8f-8dfd-57a1c8a3ba97.png">
 
 2. Drop, 실행 버튼 활성화, X 버튼 활성화<br/>
 drag & drop으로 데이터 슬롯과 함수 슬롯이 채워지면 실행 버튼이 활성화됩니다. Block들은 X 버튼을 눌러 다시 Blocks 카테고리로 이동시킬 수 있습니다. 
@@ -36,4 +38,8 @@ drag & drop으로 데이터 슬롯과 함수 슬롯이 채워지면 실행 버�
 - CSS: styled-component
 - drag & drop : react-beautiful-dnd
 - prop-types
+
+## 해결방법
+- SOLUTION.md 참고
+- https://github.com/Lee-Seonghyun316/drag-drop/blob/main/SOLUTION.md
 
