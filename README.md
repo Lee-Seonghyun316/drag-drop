@@ -1,5 +1,6 @@
 ## Description
-drag & drop 기능이 포함된 Interative Web Application을 반응형으로 구현하였습니다. 
+- drag & drop 기능이 포함된 Interactive Web Application 반응형으로 구현하였습니다. 
+- 배포링크 : https://drag-drop-rouge.vercel.app/
 
 ## Usage
 1. git clone
