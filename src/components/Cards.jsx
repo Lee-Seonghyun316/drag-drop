@@ -52,7 +52,7 @@ const Cards = ({ data, onClickDelete }) => {
   );
 };
 
-export default Cards;
+export default React.memo(Cards);
 const CardContainer = styled.div`
   display: flex;
   justify-content: space-between;

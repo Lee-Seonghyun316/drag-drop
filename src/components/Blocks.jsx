@@ -45,7 +45,7 @@ const Blocks = ({ data, title, id }) => {
   );
 };
 
-export default Blocks;
+export default React.memo(Blocks);
 
 const Title = styled.h1`
   margin: 0.5rem;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { DragDropContext } from 'react-beautiful-dnd';
 import uuid from 'react-uuid';
@@ -8,60 +8,67 @@ import Message from './Message';
 import Blocks from './Blocks';
 import Cards from './Cards';
 
+const makeUpperCase = (item) => {
+  return item.toUpperCase();
+};
+const deriveWordNum = (item) => {
+  return item.split(' ').length;
+};
+const makeReverse = (item) => {
+  return item.split('').reverse().join('');
+};
+
 const Home = () => {
   const [dropRegions, setDropRegions] = useState({ ...dropRegionData });
   const { dataSlot, functionSlot, resultSlot } = dropRegions;
   const [data, setData] = useState([...dataBlocks]);
   const [functions, setFunctions] = useState([...functionBlocks]);
-  const makeUpperCase = (item) => {
-    return item.toUpperCase();
-  };
-  const deriveWordNum = (item) => {
-    return item.split(' ').length;
-  };
-  const makeReverse = (item) => {
-    return item.split('').reverse().join('');
-  };
-  const handleDragEnd = (result) => {
-    const { source, destination } = result;
-    if (!destination) return;
-    if (source.droppableId === destination.droppableId) return;
-    const changeDropRegion = () => {
-      const destColumn = dropRegions[destination.droppableId];
-      setDropRegions({
-        ...dropRegions,
-        [destination.droppableId]: {
-          ...destColumn,
-          items: { id: uuid(), name: result.draggableId },
-        },
-        resultSlot: { ...dropRegionData['resultSlot'] },
-      });
-    };
-    if (source.droppableId === 'dataBlocks' && destination.droppableId === 'dataSlot') {
-      setData(dataBlocks.filter((item) => item.name !== result.draggableId));
-      changeDropRegion();
-    }
-    if (source.droppableId === 'functionBlocks' && destination.droppableId === 'functionSlot') {
-      setFunctions(functionBlocks.filter((item) => item.name !== result.draggableId));
-      changeDropRegion();
-    }
-  };
-  const handleClickDelete = (e, id) => {
-    if (e.target.className.includes('delete')) {
-      setDropRegions({
-        ...dropRegions,
-        [id]: { ...dropRegionData[id] },
-        resultSlot: { ...dropRegionData['resultSlot'] },
-      });
-      if (id === 'dataSlot') {
-        setData([...dataBlocks]);
+  const handleDragEnd = useCallback(
+    (result) => {
+      const { source, destination } = result;
+      if (!destination) return;
+      if (source.droppableId === destination.droppableId) return;
+      const changeDropRegion = () => {
+        const destColumn = dropRegions[destination.droppableId];
+        setDropRegions({
+          ...dropRegions,
+          [destination.droppableId]: {
+            ...destColumn,
+            items: { id: uuid(), name: result.draggableId },
+          },
+          resultSlot: { ...dropRegionData['resultSlot'] },
+        });
+      };
+      if (source.droppableId === 'dataBlocks' && destination.droppableId === 'dataSlot') {
+        setData(dataBlocks.filter((item) => item.name !== result.draggableId));
+        changeDropRegion();
       }
-      if (id === 'functionSlot') {
-        setFunctions([...functionBlocks]);
+      if (source.droppableId === 'functionBlocks' && destination.droppableId === 'functionSlot') {
+        setFunctions(functionBlocks.filter((item) => item.name !== result.draggableId));
+        changeDropRegion();
       }
-    }
-  };
-  const handleClickExecution = () => {
+    },
+    [dropRegions]
+  );
+  const handleClickDelete = useCallback(
+    (e, id) => {
+      if (e.target.className.includes('delete')) {
+        setDropRegions({
+          ...dropRegions,
+          [id]: { ...dropRegionData[id] },
+          resultSlot: { ...dropRegionData['resultSlot'] },
+        });
+        if (id === 'dataSlot') {
+          setData([...dataBlocks]);
+        }
+        if (id === 'functionSlot') {
+          setFunctions([...functionBlocks]);
+        }
+      }
+    },
+    [dropRegions]
+  );
+  const handleClickExecution = useCallback(() => {
     if (dataSlot.items === null || functionSlot.items === null) {
       return;
     }
@@ -80,7 +87,7 @@ const Home = () => {
       ...dropRegions,
       resultSlot: { ...resultSlot, items: { id: uuid(), name: result } },
     });
-  };
+  }, [dataSlot.items, dropRegions, functionSlot.items, resultSlot]);
 
   return (
     <DragDropContext onDragEnd={(result) => handleDragEnd(result)}>

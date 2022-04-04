@@ -28,7 +28,7 @@ const Message = ({ text }) => {
   );
 };
 
-export default Message;
+export default React.memo(Message);
 
 const Wrap = styled.div`
   position: absolute;

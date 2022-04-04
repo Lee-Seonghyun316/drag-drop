@@ -9,7 +9,7 @@ const Header = ({ onClick, buttonActive }) => (
   </Wrap>
 );
 
-export default Header;
+export default React.memo(Header);
 
 const Wrap = styled.header`
   position: absolute;
