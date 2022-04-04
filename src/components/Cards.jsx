@@ -5,13 +5,13 @@ import { dataBlocks, functionBlocks } from '../data';
 import PropTypes from 'prop-types';
 
 const Cards = ({ data, onClickDelete }) => {
-  const matchBelong = (id) => {
+  const matchBelong = (name) => {
     const data = dataBlocks.map(({ name }) => name);
-    if (data.includes(id)) {
+    if (data.includes(name)) {
       return 'dataBlocks';
     }
     const functions = functionBlocks.map(({ name }) => name);
-    if (functions.includes(id)) {
+    if (functions.includes(name)) {
       return 'functionBlocks';
     }
   };
@@ -81,7 +81,7 @@ const Card = styled.div`
   border: ${({ isData, isDraggedOver, isMatching, theme }) =>
     isDraggedOver
       ? isMatching
-        ? `2px dashed ${theme.color.grey}`
+        ? `2px dashed ${theme.color.purple}`
         : `2px solid red`
       : isData
       ? `1px solid ${theme.color.black}`
