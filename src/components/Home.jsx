@@ -13,6 +13,15 @@ const Home = () => {
   const { dataSlot, functionSlot, resultSlot } = dropRegions;
   const [data, setData] = useState([...dataBlocks]);
   const [functions, setFunctions] = useState([...functionBlocks]);
+  const makeUpperCase = (item) => {
+    return item.toUpperCase();
+  };
+  const deriveWordNum = (item) => {
+    return item.split(' ').length;
+  };
+  const makeReverse = (item) => {
+    return item.split('').reverse().join('');
+  };
   const handleDragEnd = (result) => {
     const { source, destination } = result;
     if (!destination) return;
@@ -51,15 +60,6 @@ const Home = () => {
         setFunctions([...functionBlocks]);
       }
     }
-  };
-  const makeUpperCase = (item) => {
-    return item.toUpperCase();
-  };
-  const deriveWordNum = (item) => {
-    return item.split(' ').length;
-  };
-  const makeReverse = (item) => {
-    return item.split('').reverse().join('');
   };
   const handleClickExecution = () => {
     if (dataSlot.items === null || functionSlot.items === null) {
