@@ -121,7 +121,7 @@ const BlocksContainer = styled.section`
   ${({ theme }) => theme.common.flexColumn};
   width: 20%;
   max-width: 10rem;
-  padding-top: 3rem;
+  padding: 3rem 0 0 1rem;
   text-align: center;
   gap: ${({ theme }) => theme.space.widely};
 `;
