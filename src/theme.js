@@ -3,16 +3,13 @@ const deviceSizes = {
   tablet: '768px',
   laptop: '1024px',
 };
-
 const device = {
   mobile: `all and (min-width:330px) and (max-width:${deviceSizes.mobile})`,
   tablet: `all and (min-width:${deviceSizes.mobile}) and (max-width:${deviceSizes.tablet})`,
   laptop: `all and (min-width:${deviceSizes.tablet})`,
   smallerThanLaptop: `all and (max-width:${deviceSizes.tablet})`,
 };
-
 const pixelToRem = (size) => `${size / 16}rem`;
-
 const fontSize = {
   big: pixelToRem(35),
   middle: pixelToRem(30),
@@ -20,16 +17,14 @@ const fontSize = {
   xSmall: pixelToRem(15),
   xxSmall: pixelToRem(12),
 };
-
 const color = {
   black: '#000',
   white: '#FFFFFF',
   lightGrey: '#cfcfcf',
   grey: '#9e9e9e',
+  purple: '#663399',
 };
-
 const borderRadius = '0.3rem';
-
 const common = {
   flexColumn: `
     display: flex;
@@ -55,7 +50,11 @@ const common = {
   }
   `,
 };
-
+const space = {
+  narrow: '0.5rem',
+  commonly: '1rem',
+  widely: '1rem',
+};
 const theme = {
   device,
   deviceSizes,
@@ -63,6 +62,7 @@ const theme = {
   color,
   borderRadius,
   common,
+  space,
 };
 
 export default theme;

@@ -22,9 +22,11 @@ const Wrap = styled.header`
 `;
 const Button = styled.button`
   z-index: 10;
-  padding: 0.5rem 2rem;
-  margin: 0.5rem 1rem;
-  background-color: ${({ theme, activate }) => (activate ? 'rebeccapurple' : theme.color.lightGrey)};
+  ${({ theme }) => `
+  padding: ${theme.space.narrow} ${theme.space.widely}; 
+  margin: ${theme.space.narrow} ${theme.space.commonly};
+  `};
+  background-color: ${({ theme, activate }) => (activate ? theme.color.purple : theme.color.lightGrey)};
   border-radius: ${({ theme }) => theme.borderRadius};
   color: ${({ theme }) => theme.color.white};
   font-weight: 600;

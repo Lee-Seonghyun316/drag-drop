@@ -34,10 +34,12 @@ const Wrap = styled.div`
   position: absolute;
   bottom: 2rem;
   right: 0rem;
-  padding: 0.5rem 1rem;
+  ${({ theme }) => `
+  padding: ${theme.space.narrow} ${theme.space.commonly}; 
+  `};
   border-radius: 2rem;
-  background-color: rebeccapurple;
-  color: white;
+  background-color: ${({ theme }) => theme.color.purple};
+  color: ${({ theme }) => theme.color.white};
   opacity: 0;
   animation: slide 1.5s linear;
   @keyframes slide {

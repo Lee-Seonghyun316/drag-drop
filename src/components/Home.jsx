@@ -123,7 +123,7 @@ const BlocksContainer = styled.section`
   max-width: 10rem;
   padding-top: 3rem;
   text-align: center;
-  gap: 2rem;
+  gap: ${({ theme }) => theme.space.widely};
 `;
 const CardsContainer = styled.main`
   width: 80%;

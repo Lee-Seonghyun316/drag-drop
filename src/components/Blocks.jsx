@@ -48,15 +48,15 @@ const Blocks = ({ data, title, id }) => {
 export default React.memo(Blocks);
 
 const Title = styled.h1`
-  margin: 0.5rem;
+  margin: ${({ theme }) => theme.space.narrow};
 `;
 const BlockContainer = styled.ul`
   ${({ theme }) => theme.common.flexColumn};
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: ${({ theme }) => theme.space.commonly};
+  margin-bottom: ${({ theme }) => theme.space.commonly};
 `;
 const Block = styled.li`
-  padding: 0.5rem;
+  padding: ${({ theme }) => theme.space.narrow};
   border-radius: ${({ theme }) => theme.borderRadius};
   box-shadow: 0px 5px 11px 5px #e0e0e0;
   background-color: ${({ theme }) => theme.color.white};
